@@ -11,7 +11,6 @@ var (
 
 func ParseCity(contents []byte) *engine.ParseResult {
 	matches := cityRe.FindAllSubmatch(contents, -1)
-
 	pr := &engine.ParseResult{}
 	for _, m := range matches {
 		name := string(m[2])
