@@ -19,7 +19,7 @@ var (
 	xingzuoRe    = regexp.MustCompile(`<div[^>]*class="m-btn purple"[^>]*>(..)座\(.+-.+\)</div>`)
 )
 
-func ParseProfile(contents []byte, name string) engine.ParseResult {
+func ParseProfile(contents []byte, name string) *engine.ParseResult {
 	profile := model.Profile{}
 
 	// 姓名(昵称)
@@ -56,7 +56,7 @@ func ParseProfile(contents []byte, name string) engine.ParseResult {
 	xingzuo := extract(contents, xingzuoRe)
 	profile.Xingzuo = xingzuo + "座"
 
-	return engine.ParseResult{Items: []interface{}{profile}}
+	return &engine.ParseResult{Items: []interface{}{profile}}
 }
 
 func extract(contents []byte, re *regexp.Regexp) string {
