@@ -2,6 +2,7 @@ package main
 
 import (
 	"spider/engine"
+	"spider/persist"
 	"spider/scheduler"
 	"spider/zhenai/parser"
 )
@@ -18,6 +19,7 @@ func main() {
 	concurrentEngine := &engine.ConcurrentEngine{
 		Scheduler:   &scheduler.QueuedScheduler{},
 		WorkerCount: 100,
+		ItemChan:    persist.ItemSaver(),
 	}
 	concurrentEngine.Run(&engine.Request{
 		URL:        "http://www.zhenai.com/zhenghun",

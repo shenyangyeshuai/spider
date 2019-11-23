@@ -1,9 +1,5 @@
 package engine
 
-import (
-	"log"
-)
-
 type Scheduler interface {
 	ReadyNotifier
 	Submit(*Request)
@@ -18,6 +14,7 @@ type ReadyNotifier interface {
 type ConcurrentEngine struct {
 	Scheduler
 	WorkerCount int
+	ItemChan    chan interface{}
 }
 
 func (engine *ConcurrentEngine) Run(seeds ...*Request) {
@@ -33,12 +30,12 @@ func (engine *ConcurrentEngine) Run(seeds ...*Request) {
 		engine.Scheduler.Submit(r)
 	}
 
-	var count = 0
 	for {
 		pr := <-outChan
 		for _, item := range pr.Items {
-			log.Printf("Got item#%d: %+v", count, item)
-			count++
+			go func(item interface{}) {
+				engine.ItemChan <- item
+			}(item)
 		}
 
 		for _, r := range pr.Requests {
