@@ -16,10 +16,14 @@ func main() {
 	// })
 
 	// Concurrent Engine
+	itemChan, err := persist.ItemSaver("dating_profile")
+	if err != nil {
+		panic(err)
+	}
 	concurrentEngine := &engine.ConcurrentEngine{
 		Scheduler:   &scheduler.QueuedScheduler{},
 		WorkerCount: 100,
-		ItemChan:    persist.ItemSaver(),
+		ItemChan:    itemChan,
 	}
 	concurrentEngine.Run(&engine.Request{
 		URL:        "http://www.zhenai.com/zhenghun",

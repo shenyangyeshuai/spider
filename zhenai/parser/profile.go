@@ -17,9 +17,10 @@ var (
 	marriageRe   = regexp.MustCompile(`<div[^>]*class="m-btn purple"[^>]*>([^<]+)</div>`)
 	occupationRe = regexp.MustCompile(`<div[^>]*class="m-btn purple"[^>]*>工作地:([^<]+)</div>`)
 	xingzuoRe    = regexp.MustCompile(`<div[^>]*class="m-btn purple"[^>]*>(..)座\(.+-.+\)</div>`)
+	idURLRe      = regexp.MustCompile(`album.zhenai.com/u/(\d+)`)
 )
 
-func ParseProfile(contents []byte, name string) *engine.ParseResult {
+func ParseProfile(contents []byte, url string, name string) *engine.ParseResult {
 	profile := model.Profile{}
 
 	// 姓名(昵称)
@@ -56,7 +57,24 @@ func ParseProfile(contents []byte, name string) *engine.ParseResult {
 	xingzuo := extract(contents, xingzuoRe)
 	profile.Xingzuo = xingzuo + "座"
 
-	return &engine.ParseResult{Items: []interface{}{profile}}
+	// URL
+
+	item := &engine.Item{
+		URL:     url,
+		Id:      extract([]byte(url), idURLRe),
+		Type:    "zhenai",
+		Payload: &profile,
+	}
+
+	// fmt.Println("############################################################")
+	// fmt.Printf("URL: %v\n", url)
+	// fmt.Printf("Id: %v\n", extract([]byte(url), idURLRe))
+	// fmt.Printf("%+v\n", item.Payload)
+	// fmt.Println("############################################################")
+
+	return &engine.ParseResult{
+		Items: []*engine.Item{item},
+	}
 }
 
 func extract(contents []byte, re *regexp.Regexp) string {

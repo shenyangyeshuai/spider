@@ -14,7 +14,7 @@ type ReadyNotifier interface {
 type ConcurrentEngine struct {
 	Scheduler
 	WorkerCount int
-	ItemChan    chan interface{}
+	ItemChan    chan *Item
 }
 
 func (engine *ConcurrentEngine) Run(seeds ...*Request) {
@@ -33,7 +33,7 @@ func (engine *ConcurrentEngine) Run(seeds ...*Request) {
 	for {
 		pr := <-outChan
 		for _, item := range pr.Items {
-			go func(item interface{}) {
+			go func(item *Item) {
 				engine.ItemChan <- item
 			}(item)
 		}
