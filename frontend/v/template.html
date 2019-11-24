@@ -1,0 +1,26 @@
+<html>
+  <body>
+    <h2>共 {{.Hits}} 个结果. 显示从 {{.Start}} 起共 {{len .Items}} 个</h2>
+
+    <table>
+      <tbody>
+        {{range .Items}}
+        <tr>
+          <td><a href="{{.URL}}">{{.Payload.Name}}</td>
+          {{with .Payload}}
+          <td>{{.Gender}}</td>
+          <td>{{.Age}}</td>
+          <td>{{.Height}}</td>
+          <td>{{.Income}}</td>
+          <td>{{.Marriage}}</td>
+          <td>{{.Occupation}}</td>
+          <td>{{.Xingzuo}}</td>
+          {{end}}
+        </tr>
+        {{else}}
+        <tr><td>没有找到相关用户</td></tr>
+        {{end}}
+      </tbody>
+    </table>
+  </body>
+</html>
