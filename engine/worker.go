@@ -5,7 +5,7 @@ import (
 	"spider/fetcher"
 )
 
-func worker(r *Request) (*ParseResult, error) {
+func Worker(r *Request) (*ParseResult, error) {
 	log.Printf("Fetching %s", r.URL)
 
 	body, err := fetcher.Fetch(r.URL)
@@ -14,5 +14,5 @@ func worker(r *Request) (*ParseResult, error) {
 		return nil, err
 	}
 
-	return r.ParserFunc(body, r.URL), nil
+	return r.Parser.Parse(body, r.URL), nil
 }

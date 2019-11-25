@@ -26,7 +26,7 @@ func ItemSaver(index string) (chan *engine.Item, error) {
 			log.Printf("Got item#%d: %+v", itemCount, item)
 			itemCount++
 
-			err := save(client, index, item)
+			err := Save(client, index, item)
 			if err != nil {
 				log.Printf("Item Saver: error saving item: %v: %v", item, err)
 			}
@@ -36,7 +36,7 @@ func ItemSaver(index string) (chan *engine.Item, error) {
 	return ch, nil
 }
 
-func save(client *elastic.Client, index string, item *engine.Item) error {
+func Save(client *elastic.Client, index string, item *engine.Item) error {
 	if item.Type == "" {
 		return fmt.Errorf("Must supply Type")
 	}

@@ -5,6 +5,7 @@ import (
 	"spider/persist"
 	"spider/scheduler"
 	"spider/zhenai/parser"
+	"spider_dist/config"
 )
 
 func main() {
@@ -21,12 +22,13 @@ func main() {
 		panic(err)
 	}
 	concurrentEngine := &engine.ConcurrentEngine{
-		Scheduler:   &scheduler.QueuedScheduler{},
-		WorkerCount: 100,
-		ItemChan:    itemChan,
+		Scheduler:        &scheduler.QueuedScheduler{},
+		WorkerCount:      100,
+		ItemChan:         itemChan,
+		RequestProcessor: engine.Worker,
 	}
 	concurrentEngine.Run(&engine.Request{
-		URL:        "http://www.zhenai.com/zhenghun",
-		ParserFunc: parser.ParseCityList,
+		URL:    "http://www.zhenai.com/zhenghun",
+		Parser: engine.NewFuncParser(parser.ParseCityList, config.ParseCityList),
 	})
 }

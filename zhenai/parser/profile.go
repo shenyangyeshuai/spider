@@ -4,6 +4,7 @@ import (
 	"regexp"
 	"spider/engine"
 	"spider/model"
+	"spider_dist/config"
 	"strconv"
 )
 
@@ -20,7 +21,7 @@ var (
 	idURLRe      = regexp.MustCompile(`album.zhenai.com/u/(\d+)`)
 )
 
-func ParseProfile(contents []byte, url string, name string) *engine.ParseResult {
+func parseProfile(contents []byte, url string, name string) *engine.ParseResult {
 	profile := model.Profile{}
 
 	// 姓名(昵称)
@@ -65,7 +66,6 @@ func ParseProfile(contents []byte, url string, name string) *engine.ParseResult 
 		Type:    "zhenai",
 		Payload: &profile,
 	}
-
 	// fmt.Println("############################################################")
 	// fmt.Printf("URL: %v\n", url)
 	// fmt.Printf("Id: %v\n", extract([]byte(url), idURLRe))
@@ -84,4 +84,22 @@ func extract(contents []byte, re *regexp.Regexp) string {
 	}
 
 	return ""
+}
+
+type ProfileParser struct {
+	userName string
+}
+
+func NewProfileParser(name string) *ProfileParser {
+	return &ProfileParser{
+		userName: name,
+	}
+}
+
+func (p *ProfileParser) Parse(contents []byte, url string) *engine.ParseResult {
+	return parseProfile(contents, url, p.userName)
+}
+
+func (p *ProfileParser) Serialize() (name string, args interface{}) {
+	return config.ProfileParser, p.userName
 }

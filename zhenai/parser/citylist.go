@@ -3,6 +3,7 @@ package parser
 import (
 	"regexp"
 	"spider/engine"
+	"spider_dist/config"
 )
 
 var (
@@ -16,8 +17,8 @@ func ParseCityList(contents []byte, url string) *engine.ParseResult {
 
 	for _, m := range matches {
 		r := &engine.Request{
-			URL:        string(m[1]),
-			ParserFunc: ParseCity,
+			URL:    string(m[1]),
+			Parser: engine.NewFuncParser(ParseCity, config.ParseCity),
 		}
 
 		pr.Requests = append(pr.Requests, r) // city url
